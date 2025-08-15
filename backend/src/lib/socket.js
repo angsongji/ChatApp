@@ -6,7 +6,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://3.81.230.117"], //"http://localhost:5173"
+    origin: ["http://54.90.152.243"], //"http://localhost:5173"
   },
 });
 
