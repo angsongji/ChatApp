@@ -1,16 +1,32 @@
-import { useRef, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import ChatBubble from "./ChatBubble";
-const ChattedMessagesWrapper = ({
-  messagesByChatId,
-  authUser,
-  selectedChat,
-}) => {
+import { useAuthStore } from "../store/useAuthStore";
+import { useMessageStore } from "../store/useMessageStore";
+const ChattedMessagesWrapper = ({ selectedChat }) => {
+  const messagesEndRef = useRef(null);
+  const { messages } = useMessageStore();
+  const { authUser } = useAuthStore();
   const imageModalRef = useRef();
   const [imageSelected, setImageSelected] = useState({
     image: "",
     currentDate: "",
     time: "",
   });
+  const messagesByChatId =
+    selectedChat == null || selectedChat._id == undefined
+      ? []
+      : messages.filter((msg) => msg.chatId === selectedChat._id);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messagesByChatId]);
+
+  useLayoutEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+    }
+  }, [selectedChat]);
+
   if (!messagesByChatId) return null;
 
   return (
@@ -49,6 +65,7 @@ const ChattedMessagesWrapper = ({
           messagesByChatId={messagesByChatId}
         />
       ))}
+      <div ref={messagesEndRef} className="" />
     </div>
   );
 };
