@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getUsers } from "../services/userService";
 import LoadingPageSkeleton from "../components/LoadingPageSkeleton";
 import { useChatRealtimeStore } from "../store/useChatRealtimeStore";
-import { TiMessages } from "react-icons/ti";
-import { useChatStore } from "../store/useChatStore";
 import { containsNormalized } from "../utils/searchUsers";
-import PATH from "../routes/path";
+import ListUsers from "../components/ListUsers";
+
 const SearchUsersPage = () => {
-  const navigate = useNavigate();
   const { onlineUsers } = useChatRealtimeStore();
   const [searchParams] = useSearchParams();
-  const { setSelectedChat, chattedUsers } = useChatStore();
   const valueSearch = searchParams.get("value");
   const [resultArray, setResultArray] = useState(null);
 
@@ -27,28 +24,9 @@ const SearchUsersPage = () => {
       };
       callApi();
     } catch (error) {
-      console.log("get users ", error);
+      console.error("get users ", error);
     }
   }, [valueSearch]);
-
-  const handleButtonChat = (user) => {
-    const chat = chattedUsers.find(
-      (chat) => chat.users.length == 1 && chat.users[0]._id == user._id
-    );
-    if (chat) setSelectedChat(chat);
-    else
-      setSelectedChat({
-        name: "",
-        users: [
-          {
-            _id: user._id,
-            fullName: user.fullName,
-            profilePic: user.profilePic,
-          },
-        ],
-      });
-    navigate(PATH.HOME);
-  };
 
   return (
     <>
@@ -344,37 +322,13 @@ const SearchUsersPage = () => {
               <div className="py-1 px-4 text-xs md:text-base opacity-60 tracking-wide ">
                 Results for <b>{valueSearch}</b>
               </div>
-              <ul className="list flex-1 bg-base-100 rounded-box shadow-md h-full w-full flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {resultArray.map((result, index) => (
-                  <li key={index} className="list-row h-fit">
-                    <div className="text-4xl font-thin opacity-30 tabular-nums">
-                      0{index + 1}
-                    </div>
-                    <div>
-                      <img
-                        className="size-10 rounded-box"
-                        src={result.profilePic}
-                      />
-                    </div>
-                    <div className="list-col-grow">
-                      <div className="line-clamp-1 font-bold">
-                        {result.fullName}
-                      </div>
-                      {onlineUsers.some((user) => user == result._id) && (
-                        <div className="text-xs font-semibold opacity-60 text-green-700">
-                          Online
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      className="btn btn-square"
-                      onClick={() => handleButtonChat(result)}
-                    >
-                      <TiMessages className="text-base md:text-lg" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex-1 overflow-auto scrollbar-hide">
+                <ListUsers
+                  resultArray={resultArray}
+                  onlineUsers={onlineUsers}
+                  css={"md:grid md:grid-cols-2 lg:grid-cols-3"}
+                />
+              </div>
             </div>
           )}
         </>

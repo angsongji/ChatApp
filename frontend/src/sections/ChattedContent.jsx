@@ -56,7 +56,7 @@ const ChatWindow = ({ selectedChat }) => {
         await sendMessageToStranger(messageDataStranger);
       } else await sendMessage(messageData, selectedChat._id);
     } catch (error) {
-      console.log("Error in send message ", error);
+      console.error("Error in send message ", error);
     }
   };
 
@@ -172,14 +172,12 @@ const ChatWindow = ({ selectedChat }) => {
         </div>
       </form>
 
-      <div className="flex-1 px-4 min-h-full overflow-auto scrollbar-hide ">
-        <div className="w-full h-auto">
-          <ChattedMessagesWrapper
-            messagesByChatId={messagesByChatId}
-            authUser={authUser}
-            selectedChat={selectedChat}
-          />
-        </div>
+      <div className="flex-1 px-4 overflow-auto scrollbar-hide">
+        <ChattedMessagesWrapper
+          messagesByChatId={messagesByChatId}
+          authUser={authUser}
+          selectedChat={selectedChat}
+        />
         <div ref={messagesEndRef} />
       </div>
     </div>
@@ -191,7 +189,7 @@ const ChattedContent = () => {
   const { isGetMessagesLoading } = useMessageStore();
   if (selectedChat == null) return <ChattedContentBegin />;
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full">
       {isGetMessagesLoading ? (
         <LoadingPageSkeleton />
       ) : (

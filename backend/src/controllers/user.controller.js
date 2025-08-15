@@ -15,7 +15,7 @@ export const updateProfile = async (req, res) => {
     if (!updatedUser) return res.status(400).json({ message: "Failed" });
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("error upload ", error);
+    console.error("error upload ", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

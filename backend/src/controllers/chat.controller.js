@@ -6,7 +6,7 @@ export const getChatByChatId = async (chatId) => {
     const chat = await Chat.findById(chatId);
     return chat;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return { message: "Internal Server Error" };
   }
 };
@@ -30,7 +30,7 @@ export const getChattedUsers = async (req, res) => {
     }));
     res.status(200).json(filterdChats);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

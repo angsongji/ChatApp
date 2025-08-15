@@ -50,7 +50,7 @@ const AvatarAndUpdate = ({ authUser, uploadProfile }) => {
       await uploadProfile({ profilePic: base64_url });
       handleCancel();
     } catch (error) {
-      console.log("Sign in error", error);
+      console.error("Sign in error", error);
     } finally {
       setIsLoading(false);
     }

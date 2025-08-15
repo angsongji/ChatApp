@@ -47,7 +47,7 @@ export const sendMessage = async (req, res) => {
 
     res.status(200).json(newMessage);
   } catch (error) {
-    console.log("Error send message ", error);
+    console.error("Error send message ", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -55,15 +55,13 @@ export const sendMessage = async (req, res) => {
 export const sendMessageToStranger = async (req, res) => {
   try {
     const { users, name } = req.body;
-    console.log("users ", users);
-    console.log("name ", name);
     const newChat = await createChat({
       currentUserId: req.user._id,
       users,
       name,
     });
     req.params.chatId = newChat._id;
-    
+
     //Send chat realtime
     newChat.users.forEach((user) => {
       const socketId = getUserSocketId(user._id);
@@ -75,7 +73,7 @@ export const sendMessageToStranger = async (req, res) => {
 
     await sendMessage(req, res);
   } catch (error) {
-    console.log("Error sendMessageToStranger", error);
+    console.error("Error sendMessageToStranger", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -25,7 +25,7 @@ const MainLayout = () => {
           setSelectedChat(null);
           await getChattedUsers();
         } catch (error) {
-          console.log("Error get chat data ", error);
+          console.error("Error get chat data ", error);
         }
       };
       getData();
@@ -35,7 +35,7 @@ const MainLayout = () => {
     return () => unSubscribeToMessages();
   }, [isCheckingAuth, authUser]);
 
-  if (isCheckingAuth && !authUser)
+  if ((isCheckingAuth && !authUser) || isCheckingAuth)
     return (
       <div className="w-full h-screen">
         <LoadingPageSkeleton />

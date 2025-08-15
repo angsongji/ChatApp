@@ -60,7 +60,7 @@ export const useMessageStore = create((set, get) => ({
     try {
       await sendMessageToStranger(messageData);
     } catch (error) {
-      console.log("error send to stranger ", error);
+      console.error("error send to stranger ", error);
       toast.error(error.response.data.message);
     } finally {
       set({ isSendMessageLoading: false });

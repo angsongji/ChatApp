@@ -6,7 +6,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://3.81.230.117"],
+    origin: ["http://3.81.230.117"], //"http://localhost:5173"
   },
 });
 
@@ -17,14 +17,12 @@ export function getUserSocketId(userId) {
 }
 
 io.on("connection", (socket) => {
-  console.log("connected ", socket.id);
   const userId = socket.handshake.query.userId;
   if (userId) onlineUsers[userId] = socket.id;
 
   io.emit("getOnlineUsers", Object.keys(onlineUsers)); // ['userId1', 'userId2', 'userId3',...]
 
   socket.on("disconnect", () => {
-    console.log("user disconnected ", socket.id);
     delete onlineUsers[userId];
     io.emit("getOnlineUsers", Object.keys(onlineUsers));
   });

@@ -43,7 +43,7 @@ function SearchUsers({ selectedUsers, setSelectedUsers }) {
       };
       callApi();
     } catch (error) {
-      console.log("get users ", error);
+      console.error("get users ", error);
     } finally {
       setIsLoading(false);
     }
@@ -188,7 +188,7 @@ function FormNewGroup({ showForm, setShowForm, theme }) {
       await createNewChat(chatData);
       setShowForm(false);
     } catch (error) {
-      console.log("error create group ", error);
+      console.error("error create group ", error);
     }
   };
   return (

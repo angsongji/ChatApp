@@ -28,14 +28,12 @@ export const signup = async (req, res) => {
     if (user) return res.status(400).json({ message: "Email already exists!" });
 
     let imageURL = profilePic;
-    console.log("image", profilePic);
     if (profilePic.includes("base64")) {
-      console.log("image upload ", profilePic);
       try {
         const uploadResponse = await cloudinary.uploader.upload(profilePic);
         imageURL = uploadResponse.secure_url;
       } catch (error) {
-        console.log("Error upload avatar sign up ", error);
+        console.error("Error upload avatar sign up ", error);
         return res
           .status(500)
           .json({ message: "Internal Server Error Upload Image" });
@@ -61,7 +59,7 @@ export const signup = async (req, res) => {
       profilePic: newUser.profilePic,
     });
   } catch (error) {
-    console.log("Error in signup controller", error.message);
+    console.error("Error in signup controller", error.message);
     res.status(500).json({ message: "Internal Server Error!" });
   }
 };

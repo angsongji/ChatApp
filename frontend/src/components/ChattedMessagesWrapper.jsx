@@ -14,7 +14,7 @@ const ChattedMessagesWrapper = ({
   if (!messagesByChatId) return null;
 
   return (
-    <div className="w-full h-full flex">
+    <div className="relative flex flex-col gap-2 h-0">
       {imageSelected.image != "" && (
         <dialog
           ref={imageModalRef}
@@ -37,20 +37,18 @@ const ChattedMessagesWrapper = ({
           </div>
         </dialog>
       )}
-      <div className="flex flex-col gap-2 flex-1 ">
-        {messagesByChatId.map((msg, index) => (
-          <ChatBubble
-            key={index}
-            msg={msg}
-            index={index}
-            imageModalRef={imageModalRef}
-            authUser={authUser}
-            selectedChat={selectedChat}
-            setImageSelected={setImageSelected}
-            messagesByChatId={messagesByChatId}
-          />
-        ))}
-      </div>
+      {messagesByChatId.map((msg, index) => (
+        <ChatBubble
+          key={index}
+          msg={msg}
+          index={index}
+          imageModalRef={imageModalRef}
+          authUser={authUser}
+          selectedChat={selectedChat}
+          setImageSelected={setImageSelected}
+          messagesByChatId={messagesByChatId}
+        />
+      ))}
     </div>
   );
 };

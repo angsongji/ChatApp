@@ -13,7 +13,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: result.data });
       useChatRealtimeStore.getState().connectSocket();
     } catch (error) {
-      console.log("Check auth", error);
+      console.error("Check auth", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -26,7 +26,7 @@ export const useAuthStore = create((set) => ({
       toast.success("Log in successfully!");
       set({ authUser: result.data });
     } catch (error) {
-      console.log("Error log in ", error);
+      console.error("Error log in ", error);
       toast.error(error.response.data.message);
     }
   },
@@ -38,7 +38,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: null });
       useChatRealtimeStore.getState().disconnectSocket();
     } catch (error) {
-      console.log("Error log out ", error);
+      console.error("Error log out ", error);
       toast.error(error.response.data.message);
     }
   },
@@ -49,7 +49,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: result.data });
       toast.success("Upload profile successfully!");
     } catch (error) {
-      console.log("Error upload profile ", error);
+      console.error("Error upload profile ", error);
       toast.error(error.response.data.message);
     }
   },

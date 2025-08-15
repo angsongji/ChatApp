@@ -49,7 +49,11 @@ const SideBarChatUsers = () => {
                       ) && "avatar-online"
                     } w-8 md:w-10`}
                   >
-                    <div className="rounded-full bg-base-100 w-full h-auto aspect-square">
+                    <div
+                      className={`${
+                        chat.users.length == 1 ? "rounded-full" : "rounded-box"
+                      } bg-base-100 w-full h-auto aspect-square`}
+                    >
                       <img
                         className=""
                         src={

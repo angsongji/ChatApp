@@ -72,21 +72,17 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
             ? `https://ui-avatars.com/api/?name=${formData.fullName}`
             : formData.profilePic,
       };
-      console.log("Data before send ", standardData);
       const response = await signUp(standardData);
-      console.log("Response:", response);
       toast.success("Sign up successfully!");
       if (formData.profilePicURL) URL.revokeObjectURL(formData.profilePicURL);
       navigate("/stranger/sign-in");
     } catch (error) {
-      console.log("Sign in error", error);
+      console.error("Sign in error", error);
       toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
   };
-
-  console.log("rerender form");
   return (
     <form
       onSubmit={handleSubmit}
@@ -251,8 +247,6 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
 const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  console.log("rerender all page ");
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-blue-200">
       <div className="absolute flex gap-2 left-1/2 -translate-x-1/2 top-[5vw] md:top-[3vw] md:translate-x-0  md:left-[3vw]  items-center text-blue-900">

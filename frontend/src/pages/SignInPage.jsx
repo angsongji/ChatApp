@@ -32,14 +32,11 @@ const FormLogIn = ({ isLoading, setIsLoading }) => {
     e.preventDefault();
     if (validateForm(formData) != 0) return;
 
-    console.log("Sending login data:", {
-      formData,
-    });
     try {
       setIsLoading(true);
       await logIn(formData);
     } catch (error) {
-      console.log("Sign in error", error);
+      console.error("Sign in error", error);
     } finally {
       setIsLoading(false);
     }

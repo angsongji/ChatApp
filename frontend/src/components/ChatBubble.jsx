@@ -39,7 +39,7 @@ const ChatBubble = ({
   };
 
   return (
-    <div>
+    <div className="">
       {currentDate !== previousDate && (
         <div className="  w-full flex justify-center items-center">
           <div className="divider text-xs w-1/2 md:w-1/4">{currentDate}</div>

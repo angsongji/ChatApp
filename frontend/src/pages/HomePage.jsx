@@ -11,7 +11,7 @@ const HomePage = () => {
           <div className="h-fit md:min-h-[5vw] w-full">
             <ChattedUserInfor />
           </div>
-          <div className=" flex-1 rounded-br-lg rounded-bl-lg flex flex-col ">
+          <div className=" flex-1 rounded-br-lg rounded-bl-lg flex flex-col">
             <ChattedContent />
           </div>
         </div>
