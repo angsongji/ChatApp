@@ -7,7 +7,7 @@ import { containsNormalized } from "../utils/searchUsers";
 import ListUsers from "../components/ListUsers";
 
 const SearchUsersPage = () => {
-  const { onlineUsers } = useChatRealtimeStore();
+  const onlineUsers = useChatRealtimeStore((state) => state.onlineUsers);
   const [searchParams] = useSearchParams();
   const valueSearch = searchParams.get("value");
   const [resultArray, setResultArray] = useState(null);
@@ -24,7 +24,7 @@ const SearchUsersPage = () => {
       };
       callApi();
     } catch (error) {
-      console.error("get users ", error);
+      // console.error("get users ", error);
     }
   }, [valueSearch]);
 
@@ -318,7 +318,7 @@ const SearchUsersPage = () => {
               </div>
             </div>
           ) : (
-            <div className="w-full h-full flex flex-col">
+            <div className="w-full h-full flex flex-col pb-3">
               <div className="py-1 px-4 text-xs md:text-base opacity-60 tracking-wide ">
                 Results for <b>{valueSearch}</b>
               </div>

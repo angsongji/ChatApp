@@ -1,17 +1,74 @@
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import ChatBubble from "./ChatBubble";
 import { useAuthStore } from "../store/useAuthStore";
 import { useMessageStore } from "../store/useMessageStore";
-const ChattedMessagesWrapper = ({ selectedChat }) => {
-  const messagesEndRef = useRef(null);
-  const { messages } = useMessageStore();
-  const { authUser } = useAuthStore();
-  const imageModalRef = useRef();
+import { useChatStore } from "../store/useChatStore";
+
+const ModalImage = forwardRef((_, ref) => {
+  const imageDiaLogRef = useRef();
   const [imageSelected, setImageSelected] = useState({
     image: "",
     currentDate: "",
     time: "",
   });
+
+  useImperativeHandle(ref, () => ({
+    setImageSelected: (data) => setImageSelected(data),
+    showModal: () => {
+      imageDiaLogRef.current?.showModal();
+    },
+  }));
+
+  return (
+    <dialog
+      ref={imageDiaLogRef}
+      className={`${
+        imageSelected.image == "" ? "hidden" : "block"
+      } bg-base-100 w-fit h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-md shadow-md`}
+      onClick={(e) => {
+        const dialog = imageDiaLogRef.current;
+        if (e.target === dialog) {
+          dialog.close();
+          setImageSelected({
+            image: "",
+            currentDate: "",
+            time: "",
+          });
+        }
+      }}
+    >
+      <div className=" w-[90vw] h-[60vh] md:w-[60vw] md:h-[90vh] p-3 relative flex justify-center items-center cursor-auto">
+        <div className="w-full h-fit md:w-fit md:h-full">
+          {imageSelected.image != "" && (
+            <img
+              src={imageSelected.image}
+              className="w-full h-auto md:h-full md:w-auto rounded-sm object-contain"
+            />
+          )}
+        </div>
+
+        <div className=" text-right absolute bottom-2 right-1 italic px-3">
+          {imageSelected.currentDate} {imageSelected.time}
+        </div>
+      </div>
+    </dialog>
+  );
+});
+
+const ChattedMessagesWrapper = () => {
+  const messagesEndRef = useRef(null);
+  const imageModalRef = useRef();
+  const messages = useMessageStore((state) => state.messages);
+  const authUser = useAuthStore((state) => state.authUser);
+  const selectedChat = useChatStore((state) => state.selectedChat);
+
   const messagesByChatId =
     selectedChat == null || selectedChat._id == undefined
       ? []
@@ -28,31 +85,9 @@ const ChattedMessagesWrapper = ({ selectedChat }) => {
   }, [selectedChat]);
 
   if (!messagesByChatId) return null;
-
   return (
     <div className="relative flex flex-col gap-2 h-0">
-      {imageSelected.image != "" && (
-        <dialog
-          ref={imageModalRef}
-          className=" bg-base-100 w-fit h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-md shadow-md "
-          onClick={(e) => {
-            const dialog = imageModalRef.current;
-            if (e.target === dialog) {
-              dialog.close();
-            }
-          }}
-        >
-          <div className=" w-[90vw] h-[60vh] md:w-[60vw] md:h-[90vh] p-3 relative flex justify-start cursor-auto ">
-            <img
-              src={imageSelected.image}
-              className=" object-scale-down w-auto h-auto rounded-sm "
-            />
-            <div className=" text-right absolute bottom-2 right-1 italic px-3  bg-base-100">
-              {imageSelected.currentDate} {imageSelected.time}
-            </div>
-          </div>
-        </dialog>
-      )}
+      <ModalImage ref={imageModalRef} />
       {messagesByChatId.map((msg, index) => (
         <ChatBubble
           key={index}
@@ -61,7 +96,6 @@ const ChattedMessagesWrapper = ({ selectedChat }) => {
           imageModalRef={imageModalRef}
           authUser={authUser}
           selectedChat={selectedChat}
-          setImageSelected={setImageSelected}
           messagesByChatId={messagesByChatId}
         />
       ))}

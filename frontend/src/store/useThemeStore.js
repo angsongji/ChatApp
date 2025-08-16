@@ -4,4 +4,6 @@ export const useThemeStore = create((set) => ({
   changeTheme: (choose) => {
     set({ theme: choose });
   },
+
+  reset: () => set({ theme: "light" }),
 }));

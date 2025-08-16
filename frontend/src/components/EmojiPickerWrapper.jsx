@@ -3,19 +3,21 @@ import { useThemeStore } from "../store/useThemeStore";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiWinkFill } from "react-icons/bs";
 function EmojiPickerWrapper({ setMessage }) {
-  const { theme } = useThemeStore();
-  const [showPicker, setShowPicker] = useState(false);
   const emojiPickerWrapperRef = useRef(null);
+  const theme = useThemeStore((state) => state.theme);
+  const [showPicker, setShowPicker] = useState(false);
+
   const handleEmojiClick = (emojiData) => {
     setMessage((prev) => prev + "" + emojiData.emoji);
   };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         emojiPickerWrapperRef.current &&
         !emojiPickerWrapperRef.current.contains(event.target)
       ) {
-        setShowPicker(false); // Đóng nếu click ra ngoài
+        setShowPicker(false); // close if click outside
       }
     };
 

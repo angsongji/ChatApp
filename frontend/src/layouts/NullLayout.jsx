@@ -4,8 +4,10 @@ import { useAuthStore } from "../store/useAuthStore";
 import LoadingPageSkeleton from "../components/LoadingPageSkeleton";
 
 const NullLayout = () => {
-  const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
   const navigate = useNavigate();
+  const authUser = useAuthStore((state) => state.authUser);
+  const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
+  const checkAuth = useAuthStore((state) => state.checkAuth);
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);

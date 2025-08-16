@@ -1,23 +1,103 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlayCircle, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import {
+  FaPlayCircle,
+  FaRegEye,
+  FaRegEyeSlash,
+  FaCheck,
+  FaTimes,
+} from "react-icons/fa";
 import { GrFormNextLink } from "react-icons/gr";
 import toast from "react-hot-toast";
 import { signUp } from "../services/authService";
+import { passwordRequire, checkPassword } from "../utils/validate";
 
-const validateForm = (formData) => {
+const validateForm = (formData, passValid) => {
   if (!formData.fullName.trim()) return toast.error("Full name is required");
 
   if (!formData.email.trim()) return toast.error("Email is required");
 
   if (!formData.password.trim()) return toast.error("Password is required");
 
+  if (!passValid) return toast.error("Invalid password format.");
+
   if (formData.password !== formData.confirmPassword)
     return toast.error("Passwords do not match!");
-  return 0; //Not show any toast = not have error
+
+  return 0; //Not show any toast = 0 = not have error
+};
+
+const PasswordInput = ({ formData, handleChange, isLoading, setPassValid }) => {
+  const [showPass, setShowPass] = useState(false);
+  const allValid = passwordRequire.every((r) =>
+    checkPassword(formData.password, r.id)
+  );
+  if (allValid) setPassValid(allValid);
+
+  return (
+    <div className="w-full">
+      <label className="input relative flex items-center gap-2">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
+            <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+          </g>
+        </svg>
+        <input
+          name="password"
+          placeholder="password"
+          type={showPass ? "text" : "password"}
+          value={formData.password}
+          onChange={handleChange}
+          disabled={isLoading}
+          className="w-full px-2 py-1"
+        />
+        <button
+          type="button"
+          aria-label={showPass ? "Hide password" : "Show password"}
+          className="text-xl flex items-center cursor-pointer text-gray-400"
+          onClick={() => setShowPass((prev) => !prev)}
+        >
+          {showPass ? <FaRegEyeSlash /> : <FaRegEye />}
+        </button>
+      </label>
+
+      <ul className="w-full pt-2 pl-1">
+        {passwordRequire.map((require) => {
+          const isValid = checkPassword(formData.password, require.id);
+          return (
+            <li
+              key={require.id}
+              className="text-[10px] md:text-sm flex items-center gap-2"
+            >
+              {isValid ? (
+                <FaCheck className="text-green-500 text-xs" />
+              ) : (
+                <FaTimes className="text-red-400 text-xs" />
+              )}
+              <span className={isValid ? "text-green-500" : "text-gray-400"}>
+                {require.title}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 };
 
 const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
+  const [passValid, setPassValid] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -27,20 +107,20 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
     profilePicURL: "",
   });
   const avatarRef = useRef();
-  const [showPass, setShowPass] = useState(false);
+
   const handleUploadAvatar = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     setFormData((prev) => {
-      // Nếu đã có blob URL cũ thì revoke nó
+      // have previous blob ? revoke it
       if (prev.profilePicURL) {
         URL.revokeObjectURL(prev.profilePicURL);
       }
       return prev;
     });
 
-    const url = URL.createObjectURL(file); // Tạo URL tạm thời để hiển thị ảnh
+    const url = URL.createObjectURL(file); //blob url
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () =>
@@ -61,7 +141,7 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm(formData) != 0) return;
+    if (validateForm(formData, passValid) != 0) return;
 
     setIsLoading(true);
     try {
@@ -77,7 +157,7 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
       if (formData.profilePicURL) URL.revokeObjectURL(formData.profilePicURL);
       navigate("/stranger/sign-in");
     } catch (error) {
-      console.error("Sign in error", error);
+      // console.error("Sign in error", error);
       toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
@@ -86,7 +166,7 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className=" w-full  flex flex-col justify-center gap-7 md:gap-10 items-center"
+      className=" w-full  flex flex-col justify-center gap-7 md:gap-8 items-center"
     >
       <label className="input ">
         <svg
@@ -140,41 +220,12 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
           disabled={isLoading}
         />
       </label>
-
-      <label className="input ">
-        <svg
-          className="h-[1em] opacity-50"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <g
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            strokeWidth="2.5"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-            <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-          </g>
-        </svg>
-        <input
-          name="password"
-          placeholder="password"
-          type={showPass ? "text" : "password"}
-          value={formData.password}
-          onChange={handleChange}
-          disabled={isLoading}
-        />
-        <button
-          type="button"
-          className=" text-xl flex items-center cursor-pointer text-gray-400"
-          onClick={() => setShowPass((prev) => !prev)}
-        >
-          {showPass ? <FaRegEyeSlash /> : <FaRegEye />}
-        </button>
-      </label>
-
+      <PasswordInput
+        formData={formData}
+        handleChange={handleChange}
+        isLoading={isLoading}
+        setPassValid={setPassValid}
+      />
       <label className="input ">
         <svg
           className="h-[1em] opacity-50"
@@ -204,7 +255,7 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
 
       <div className="avatar flex flex-col gap-1 items-center">
         <p className="text-xs lg:text-sm text-gray-500">
-          Update profile avatar
+          Use this avatar or click to change it.
         </p>
         <div className="w-24 rounded-full  relative">
           <img
@@ -245,8 +296,9 @@ const FormSignUp = ({ isLoading, setIsLoading, navigate }) => {
 };
 
 const SignUpPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-blue-200">
       <div className="absolute flex gap-2 left-1/2 -translate-x-1/2 top-[5vw] md:top-[3vw] md:translate-x-0  md:left-[3vw]  items-center text-blue-900">
@@ -265,7 +317,7 @@ const SignUpPage = () => {
           </div>
         </div>
       </div>
-      <div className="overflow-auto w-full max-w-[90vw] md:max-w-[45vw] xl:max-w-[30vw] h-4/5 bg-blue-100/80 rounded-lg shadow-lg px-5 md:px-10 relative">
+      <div className="overflow-auto scrollbar-hide w-full max-w-[90vw] md:min-w-[400px] md:max-w-[400px] h-4/5 bg-blue-100/80 rounded-lg shadow-lg px-5 md:px-10 relative">
         <div className="flex flex-col items-center mt-10 mb-15 text-blue-900">
           <div className="text-2xl font-bold">SIGN UP</div>
         </div>

@@ -9,8 +9,10 @@ import { useState } from "react";
 
 const themes = ["light", "dark", "cupcake", "halloween"];
 const ContentSignIn = () => {
-  const { authUser, logOut } = useAuthStore();
-  const { theme, changeTheme } = useThemeStore();
+  const authUser = useAuthStore((state) => state.authUser);
+  const logOut = useAuthStore((state) => state.logOut);
+  const theme = useThemeStore((state) => state.theme);
+  const changeTheme = useThemeStore((state) => state.changeTheme);
   const [valueSearch, setValueSearch] = useState("");
   const navigate = useNavigate();
   const handleLogOut = async () => {

@@ -3,15 +3,16 @@ import { useChatRealtimeStore } from "../store/useChatRealtimeStore";
 import { PiEmptyBold } from "react-icons/pi";
 import { useEffect, useState } from "react";
 const SideBarChatUsers = () => {
-  const {
-    chattedUsers,
-    selectedChat,
-    setSelectedChat,
-    isCheckedShowOnline,
-    setChattedUsers,
-  } = useChatStore();
+  const chattedUsers = useChatStore((state) => state.chattedUsers);
+  const selectedChat = useChatStore((state) => state.selectedChat);
+  const setSelectedChat = useChatStore((state) => state.setSelectedChat);
+  const isCheckedShowOnline = useChatStore(
+    (state) => state.isCheckedShowOnline
+  );
+  const setChattedUsers = useChatStore((state) => state.setChattedUsers);
+  const onlineUsers = useChatRealtimeStore((state) => state.onlineUsers);
   const [chattedUsersAll, setChattedUsersAll] = useState(chattedUsers);
-  const { onlineUsers } = useChatRealtimeStore();
+
   useEffect(() => {
     if (!isCheckedShowOnline) setChattedUsers(chattedUsersAll);
     else {

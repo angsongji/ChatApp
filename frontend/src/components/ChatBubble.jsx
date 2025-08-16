@@ -1,12 +1,9 @@
-import React from "react";
-
 const ChatBubble = ({
   msg,
   index,
   imageModalRef,
   authUser,
   selectedChat,
-  setImageSelected,
   messagesByChatId,
 }) => {
   const isCurrentUser = msg.senderId === authUser._id;
@@ -28,11 +25,12 @@ const ChatBubble = ({
   });
 
   const openModal = () => {
-    setImageSelected({
+    imageModalRef?.current.setImageSelected({
       image: msg.image,
       currentDate,
       time,
     });
+
     if (imageModalRef.current) {
       imageModalRef.current.showModal();
     }

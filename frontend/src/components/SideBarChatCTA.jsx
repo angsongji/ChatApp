@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useChatStore } from "../store/useChatStore";
 import { useThemeStore } from "../store/useThemeStore";
@@ -30,7 +30,7 @@ function InputName({ setChatData }) {
 }
 
 function SearchUsers({ selectedUsers, setSelectedUsers }) {
-  const [users, setUsers] = useState([]); //userIds
+  const [users, setUsers] = useState([]); //array userIds
   const [filterUsers, setFilterUsers] = useState([]);
   const [valueSearch, setValueSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ function SearchUsers({ selectedUsers, setSelectedUsers }) {
       };
       callApi();
     } catch (error) {
-      console.error("get users ", error);
+      // console.error("get users ", error);
     } finally {
       setIsLoading(false);
     }
@@ -173,12 +173,16 @@ function SelectUsers({ setChatData }) {
   );
 }
 function FormNewGroup({ showForm, setShowForm, theme }) {
-  const { isCreateNewChatLoading, createNewChat } = useChatStore();
+  const formRef = useRef();
+  const isCreateNewChatLoading = useChatStore(
+    (state) => state.isCreateNewChatLoading
+  );
+  const createNewChat = useChatStore((state) => state.createNewChat);
   const [chatData, setChatData] = useState({
     name: "",
     users: [],
   });
-  const formRef = useRef();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (chatData.name == "") return toast.error("Group name is required");
@@ -188,7 +192,7 @@ function FormNewGroup({ showForm, setShowForm, theme }) {
       await createNewChat(chatData);
       setShowForm(false);
     } catch (error) {
-      console.error("error create group ", error);
+      // console.error("error create group ", error);
     }
   };
   return (
@@ -240,9 +244,15 @@ function FormNewGroup({ showForm, setShowForm, theme }) {
   );
 }
 const SideBarChatCTA = () => {
-  const { isCheckedShowOnline, setIsCheckedShowOnline } = useChatStore();
+  const isCheckedShowOnline = useChatStore(
+    (state) => state.isCheckedShowOnline
+  );
+  const setIsCheckedShowOnline = useChatStore(
+    (state) => state.setIsCheckedShowOnline
+  );
+  const theme = useThemeStore((state) => state.theme);
   const [showForm, setShowForm] = useState(false);
-  const { theme } = useThemeStore();
+
   return (
     <div className="w-full" data-theme={theme}>
       <div className="w-full flex items-end justify-between flex-wrap-reverse gap-1 py-2 md:py-1 relative z-1">

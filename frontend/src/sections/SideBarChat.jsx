@@ -3,7 +3,9 @@ import SideBarChatSkeleton from "../components/SideBarChatSkeleton";
 import SideBarChattedUsers from "../components/SideBarChattedUsers";
 
 const SideBarChat = () => {
-  const { isChattedUsersLoading } = useChatStore();
+  const isChattedUsersLoading = useChatStore(
+    (state) => state.isChattedUsersLoading
+  );
 
   return (
     <div className="w-full h-full">

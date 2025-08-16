@@ -50,7 +50,7 @@ const AvatarAndUpdate = ({ authUser, uploadProfile }) => {
       await uploadProfile({ profilePic: base64_url });
       handleCancel();
     } catch (error) {
-      console.error("Sign in error", error);
+      // console.error("Sign in error", error);
     } finally {
       setIsLoading(false);
     }
@@ -111,11 +111,11 @@ const AvatarAndUpdate = ({ authUser, uploadProfile }) => {
 };
 
 const PrivateProfilePage = () => {
-  const { authUser, uploadProfile } = useAuthStore();
+  const authUser = useAuthStore((state) => state.authUser);
+  const uploadProfile = useAuthStore((state) => state.uploadProfile);
   return (
     <div className="w-full h-full flex flex-col items-center gap-10 ">
       <AvatarAndUpdate authUser={authUser} uploadProfile={uploadProfile} />
-
       <div className="min-w-fit md:w-1/3  flex flex-col gap-3 lg:gap-5 items-center">
         {titles.map((item, index) => (
           <label key={index} className="input w-full">

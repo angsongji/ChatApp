@@ -42,13 +42,12 @@ const ShowMembersWrapper = forwardRef(({ selectedChat, onlineUsers }, ref) => {
 });
 
 const ChattedUserInfor = () => {
-  const { selectedChat } = useChatStore();
-  const { onlineUsers } = useChatRealtimeStore();
   const membersRef = useRef();
+  const selectedChat = useChatStore((state) => state.selectedChat);
+  const onlineUsers = useChatRealtimeStore((state) => state.onlineUsers);
   const memOnline = selectedChat?.users.filter((user) =>
     onlineUsers.some((userId) => userId == user._id)
   );
-  console.log("render 1");
   return (
     <>
       {selectedChat != null && (
@@ -60,7 +59,7 @@ const ChattedUserInfor = () => {
               onlineUsers={onlineUsers}
             />
           )}
-          <div className="w-full h-[7vh] md:h-full flex px-4 bg-base-300">
+          <div className="w-full h-[7vh] md:h-full flex px-4 bg-base-300 rounded-tl-box rounded-tr-box">
             <div className="flex justify-center md:justify-between gap-2 items-center w-full">
               <div
                 className={`avatar ${

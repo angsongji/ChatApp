@@ -60,4 +60,13 @@ export const useChatStore = create((set, get) => ({
       set({ isCreateNewChatLoading: false });
     }
   },
+
+  reset: () =>
+    set({
+      selectedChat: null,
+      isCheckedShowOnline: false,
+      chattedUsers: [],
+      isChattedUsersLoading: false,
+      isCreateNewChatLoading: false,
+    }),
 }));

@@ -9,11 +9,19 @@ import LoadingPageSkeleton from "../components/LoadingPageSkeleton";
 import { useChatRealtimeStore } from "../store/useChatRealtimeStore";
 
 const MainLayout = () => {
-  const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
-  const { setSelectedChat, getChattedUsers } = useChatStore();
-  const { subscribeToMessages, unSubscribeToMessages } = useChatRealtimeStore();
-  const { theme } = useThemeStore();
   const navigate = useNavigate();
+  const authUser = useAuthStore((state) => state.authUser);
+  const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+  const setSelectedChat = useChatStore((state) => state.setSelectedChat);
+  const getChattedUsers = useChatStore((state) => state.getChattedUsers);
+  const subscribeToMessages = useChatRealtimeStore(
+    (state) => state.subscribeToMessages
+  );
+  const unSubscribeToMessages = useChatRealtimeStore(
+    (state) => state.unSubscribeToMessages
+  );
+  const theme = useThemeStore((state) => state.theme);
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -25,7 +33,7 @@ const MainLayout = () => {
           setSelectedChat(null);
           await getChattedUsers();
         } catch (error) {
-          console.error("Error get chat data ", error);
+          // console.error("Error get chat data ", error);
         }
       };
       getData();

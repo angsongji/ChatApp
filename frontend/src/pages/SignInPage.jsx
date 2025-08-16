@@ -10,11 +10,11 @@ const validateForm = (formData) => {
 
   if (!formData.password.trim()) return toast.error("Password is required");
 
-  return 0; //Not show any toast = not have error
+  return 0; //Not show any toast = 0 = not have error
 };
 
 const FormLogIn = ({ isLoading, setIsLoading }) => {
-  const { logIn } = useAuthStore();
+  const logIn = useAuthStore((state) => state.logIn);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -36,7 +36,7 @@ const FormLogIn = ({ isLoading, setIsLoading }) => {
       setIsLoading(true);
       await logIn(formData);
     } catch (error) {
-      console.error("Sign in error", error);
+      // console.error("Sign in error", error);
     } finally {
       setIsLoading(false);
     }
@@ -125,9 +125,8 @@ const FormLogIn = ({ isLoading, setIsLoading }) => {
 };
 
 const SignInPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-blue-200">
@@ -147,7 +146,7 @@ const SignInPage = () => {
           </div>
         </div>
       </div>
-      <div className="w-full max-w-[90vw] md:max-w-[45vw] xl:max-w-[30vw] bg-blue-100/80 rounded-lg shadow-lg px-5 md:px-10 relative">
+      <div className="w-full max-w-[90vw] md:min-w-[400px] md:max-w-[400px] bg-blue-100/80 rounded-lg shadow-lg px-5 md:px-10 relative">
         <div className="flex flex-col items-center mt-10 mb-15 text-blue-900">
           <div className="text-2xl font-bold">SIGN IN</div>
         </div>

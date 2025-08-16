@@ -34,7 +34,7 @@ export const useMessageStore = create((set, get) => ({
           }));
         }
       } catch (error) {
-        console.error("Failed to fetch messages:", error);
+        // console.error("Failed to fetch messages:", error);
       } finally {
         set({ isGetMessagesLoading: false });
       }
@@ -60,10 +60,18 @@ export const useMessageStore = create((set, get) => ({
     try {
       await sendMessageToStranger(messageData);
     } catch (error) {
-      console.error("error send to stranger ", error);
+      // console.error("error send to stranger ", error);
       toast.error(error.response.data.message);
     } finally {
       set({ isSendMessageLoading: false });
     }
   },
+
+  reset: () =>
+    set({
+      messages: [],
+      chatsId: [],
+      isGetMessagesLoading: false,
+      isSendMessageLoading: false,
+    }),
 }));

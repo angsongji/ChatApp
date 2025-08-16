@@ -9,11 +9,18 @@ import { FaPaperPlane } from "react-icons/fa6";
 import ChattedContentBegin from "../components/ChattedContentBegin";
 import EmojiPickerWrapper from "../components/EmojiPickerWrapper";
 import ChattedMessagesWrapper from "../components/ChattedMessagesWrapper";
+import toast from "react-hot-toast";
 
-const FormInputMessage = ({ selectedChat }) => {
+const FormInputMessage = () => {
   const fileInputRef = useRef(null);
-  const { isSendMessageLoading, sendMessage, sendMessageToStranger } =
-    useMessageStore();
+  const selectedChat = useChatStore((state) => state.selectedChat);
+  const isSendMessageLoading = useMessageStore(
+    (state) => state.isSendMessageLoading
+  );
+  const sendMessage = useMessageStore((state) => state.sendMessage);
+  const sendMessageToStranger = useMessageStore(
+    (state) => state.sendMessageToStranger
+  );
   const [message, setMessage] = useState("");
   const [imageURL, setImageURL] = useState({
     base64_url: "",
@@ -37,7 +44,7 @@ const FormInputMessage = ({ selectedChat }) => {
         await sendMessageToStranger(messageDataStranger);
       } else await sendMessage(messageData, selectedChat._id);
     } catch (error) {
-      console.error("Error in send message ", error);
+      // console.error("Error in send message ", error);
     }
   };
 
@@ -49,6 +56,17 @@ const FormInputMessage = ({ selectedChat }) => {
     const file = e.target.files[0];
 
     if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only accept image file.");
+      return;
+    }
+
+    const maxSize = 1 * 1024 * 1024; // 1MB
+    if (file.size > maxSize) {
+      toast.error("Maximum file size: 1MB (1024KB).");
+      return;
+    }
+
     if (imageURL.blob_url) URL.revokeObjectURL(imageURL.blob_url);
     const url = URL.createObjectURL(file);
     const reader = new FileReader();
@@ -154,28 +172,26 @@ const FormInputMessage = ({ selectedChat }) => {
   );
 };
 
-const ChatWindow = ({ selectedChat }) => {
+const ChatWindow = () => {
   return (
     <div className=" w-full flex flex-col-reverse gap-4 min-h-full max-h-[calc(100vh-25vh)]">
-      <FormInputMessage selectedChat={selectedChat} />
+      <FormInputMessage />
       <div className="flex-1 px-4 overflow-auto scrollbar-hide">
-        <ChattedMessagesWrapper selectedChat={selectedChat} />
+        <ChattedMessagesWrapper />
       </div>
     </div>
   );
 };
 
 const ChattedContent = () => {
-  const { selectedChat } = useChatStore();
-  const { isGetMessagesLoading } = useMessageStore();
+  const selectedChat = useChatStore((state) => state.selectedChat);
+  const isGetMessagesLoading = useMessageStore(
+    (state) => state.isGetMessagesLoading
+  );
   if (selectedChat == null) return <ChattedContentBegin />;
   return (
     <div className="w-full h-full">
-      {isGetMessagesLoading ? (
-        <LoadingPageSkeleton />
-      ) : (
-        <ChatWindow selectedChat={selectedChat} />
-      )}
+      {isGetMessagesLoading ? <LoadingPageSkeleton /> : <ChatWindow />}
     </div>
   );
 };
