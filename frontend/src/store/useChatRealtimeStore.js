@@ -4,8 +4,8 @@ import { io } from "socket.io-client";
 import { useAuthStore } from "./useAuthStore";
 import { useChatStore } from "./useChatStore";
 import { useMessageStore } from "./useMessageStore";
-// const BACKEND_URL = "http://54.90.152.243";
-const BACKEND_URL = "http://localhost:5001";
+const BACKEND_URL = "https://funtogether.online";
+// const BACKEND_URL = "http://localhost:5001";
 export const useChatRealtimeStore = create((set, get) => ({
   socket: null,
   onlineUsers: [],

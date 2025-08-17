@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  // baseURL: "http://54.90.152.243/api",
-  baseURL: "http://localhost:5001/api",
+  baseURL: "https://funtogether.online/api",
+  // baseURL: "http://localhost:5001/api",
   withCredentials: true,
   timeout: 20000, // 20s timeout
 });

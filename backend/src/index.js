@@ -16,8 +16,8 @@ app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "http://54.90.152.243",
-    origin: "http://localhost:5173",
+    origin: "https://funtogether.online",
+    // origin: "http://localhost:5173",
     credentials: true,
   })
 );

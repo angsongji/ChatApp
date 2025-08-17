@@ -16,7 +16,7 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: result.data });
       useChatRealtimeStore.getState().connectSocket();
     } catch (error) {
-      // console.error("Check auth", error);
+      //console.error("Check auth", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
