@@ -7,17 +7,15 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Serve dist with Vite preview
-FROM node:18-alpine
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
 
-WORKDIR /app
+# Copy built files
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy built files only
-COPY --from=build /app/dist ./dist
-
-# Install Vite globally
-RUN npm install -g vite
+# Optional: Custom Nginx config
+# COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
-
-CMD ["vite", "preview", "--port", "80", "--host"]
+CMD ["nginx", "-g", "daemon off;"]

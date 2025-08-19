@@ -15,20 +15,20 @@ export const useChatStore = create((set, get) => ({
   setSelectedChat: (chat) => {
     set({ selectedChat: chat });
     const chattedUsers = get().chattedUsers;
-    const updateChattedUser = chattedUsers.find(
+    const updateChattedUser = chattedUsers?.find(
       (chattedUser) =>
         chat?._id == chattedUser._id &&
         chattedUser.newMessage !== undefined &&
         chattedUser.newMessage
     );
     if (updateChattedUser)
-      get().setChattedUsers([
-        ...chattedUsers.filter((chattedUser) => chattedUser._id != chat._id),
-        {
-          ...updateChattedUser,
-          newMessage: false,
-        },
-      ]);
+      get().setChattedUsers(
+        chattedUsers?.map((chattedUser) =>
+          chattedUser._id === updateChattedUser._id
+            ? { ...updateChattedUser, newMessage: false }
+            : chattedUser
+        )
+      );
     if (chat == null) useMessageStore.getState().setMessages([]);
     else if (chat != null && chat._id != undefined)
       useMessageStore.getState().getMessages(chat._id);

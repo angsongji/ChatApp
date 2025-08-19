@@ -5,6 +5,9 @@ const axiosClient = axios.create({
   // baseURL: "http://localhost:5001/api",
   withCredentials: true,
   timeout: 20000, // 20s timeout
+  headers: {
+    "X-App-Auth": import.meta.env.VITE_APP_SECRET_HEADER,
+  },
 });
 
 // axiosClient.interceptors.request.use(

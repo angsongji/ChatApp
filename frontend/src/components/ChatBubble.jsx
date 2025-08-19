@@ -70,12 +70,13 @@ const ChatBubble = ({
         >
           {msg.image != "" && (
             <div
-              className="w-[35vw] h-auto md:h-[15vw] md:w-auto relative shadow-md cursor-pointer"
+              className="w-fit h-fit relative shadow-md cursor-pointer"
               onClick={openModal}
             >
               <img
                 src={msg.image}
-                className="object-contain w-full h-full rounded-sm"
+                className="object-contain w-[35vw] h-auto max-h-[30vw] md:min-h-0 md:max-h-[15vw] md:w-auto rounded-sm"
+                loading="lazy"
               />
             </div>
           )}

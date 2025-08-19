@@ -3,9 +3,8 @@ import { lazy } from "react";
 import PATH from "./path.js";
 
 //layouts
-import MainLayout from "../layouts/MainLayout";
-import NullLayout from "../layouts/NullLayout.jsx";
-import SearchUsersPage from "../pages/SearchUsersPage.jsx";
+const MainLayout = lazy(() => import("../layouts/MainLayout"));
+const NullLayout = lazy(() => import("../layouts/NullLayout.jsx"));
 
 //pages
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
@@ -13,6 +12,7 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 const SignInPage = lazy(() => import("../pages/SignInPage"));
 const SignUpPage = lazy(() => import("../pages/SignUpPage"));
 const PrivateProfilePage = lazy(() => import("../pages/PrivateProfilePage"));
+const SearchUsersPage = lazy(() => import("../pages/SearchUsersPage.jsx"));
 
 const router = createBrowserRouter([
   {

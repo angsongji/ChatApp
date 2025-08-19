@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 import { io } from "socket.io-client";
 import { useAuthStore } from "./useAuthStore";
 import { useChatStore } from "./useChatStore";
@@ -59,5 +58,5 @@ export const useChatRealtimeStore = create((set, get) => ({
     if (socket) socket.off("newMessage");
   },
 
-  reset: () => set({ socket: null, onlineUsers: [] }),
+  reset: () => set({ onlineUsers: [] }),
 }));
